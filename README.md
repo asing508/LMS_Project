@@ -24,4 +24,5 @@ node server.js
 - Body-parser - Request parsing
 
 ## Team
-Team LibrariansUp - CSE 412 Database Project
+Team LibrariesUp - CSE 412 Database Project
+
