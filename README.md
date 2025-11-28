@@ -32,7 +32,3 @@ node server.js
 ## Team
 Team LibrariansUp - CSE 412 Database Project
 ```
-
-
-Save this as `README.md` in your project root.
-
