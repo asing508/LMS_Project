@@ -6,6 +6,8 @@
 
 
 ```bash
+npm init -y
+npm install express pg cors body-parser
 npm install
 ```
 
@@ -20,14 +22,6 @@ node server.js
 - PostgreSQL - Database
 - CORS - Cross-origin requests
 - Body-parser - Request parsing
-
-## Quick Start from Scratch
-If starting fresh:
-```bash
-npm init -y
-npm install express pg cors body-parser
-node server.js
-```
 
 ## Team
 Team LibrariansUp - CSE 412 Database Project
