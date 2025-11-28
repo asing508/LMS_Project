@@ -31,4 +31,3 @@ node server.js
 
 ## Team
 Team LibrariansUp - CSE 412 Database Project
-```
