@@ -1,11 +1,9 @@
-﻿```markdown
 # Library Management System
 
 ## Setup Instructions
 
 ### 1. Install Dependencies
-```
-```
+
 
 ```bash
 npm install
@@ -37,3 +35,4 @@ Team LibrariansUp - CSE 412 Database Project
 
 
 Save this as `README.md` in your project root.
+
