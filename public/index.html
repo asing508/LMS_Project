@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LibrariansUp - LMS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Library Management System (LMS)</h1>
+            <p>Phase 3 Implementation | Team: LibrariansUp</p>
+        </header>
+
+        <section id="view-books">
+            <h2>Book Inventory</h2>
+            <div class="controls">
+                <input type="text" id="searchInput" placeholder="Search by Title...">
+                <button onclick="searchBooks()">Search</button>
+                <button onclick="loadBooks()">Refresh List</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ISBN</th>
+                        <th>Title</th>
+                        <th>Publisher</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="bookTableBody">
+                </tbody>
+            </table>
+        </section>
+
+        <hr>
+
+        <section id="add-book">
+            <h2>Add New Book</h2>
+            <form id="addBookForm">
+                <input type="text" id="newIsbn" placeholder="ISBN (13 chars)" required>
+                <input type="text" id="newTitle" placeholder="Book Title" required>
+                <input type="number" id="newPrice" placeholder="Price" step="0.01" required>
+                <input type="text" id="newCategory" placeholder="Category" required>
+                <input type="number" id="pubId" placeholder="Publisher ID" value="1" required>
+                <input type="number" id="staffId" placeholder="Staff ID" value="1" required>
+                <button type="submit">Add Book</button>
+            </form>
+        </section>
+
+        <hr>
+
+        <section id="borrow-book">
+            <h2>Issue Book (Borrowing Transaction)</h2>
+            <form id="borrowForm">
+                <input type="number" id="borrowUserId" placeholder="User ID" required>
+                <input type="text" id="borrowIsbn" placeholder="ISBN to Borrow" required>
+                <label>Issue Date:</label>
+                <input type="date" id="issueDate" required>
+                <label>Due Date:</label>
+                <input type="date" id="dueDate" required>
+                <button type="submit">Issue Book</button>
+            </form>
+            <p id="transactionMessage"></p>
+        </section>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
