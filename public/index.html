@@ -21,20 +21,36 @@
                 <input type="text" id="searchInput" placeholder="Search by Title...">
                 <button onclick="searchBooks()">Search</button>
                 <button onclick="loadBooks()">Refresh List</button>
+                <label>Sort by:</label>
+                <select id="sortSelect" onchange="sortBooks()">
+                    <option value="title">Title (A-Z)</option>
+                    <option value="title_desc">Title (Z-A)</option>
+                    <option value="price_asc">Price (Low-High)</option>
+                    <option value="price_desc">Price (High-Low)</option>
+                </select>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ISBN</th>
-                        <th>Title</th>
-                        <th>Publisher</th>
-                        <th>Price</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="bookTableBody">
-                </tbody>
-            </table>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>ISBN</th>
+                            <th>Title</th>
+                            <th>Publisher</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bookTableBody">
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination">
+                <button id="prevBtn" onclick="prevPage()" disabled>← Previous</button>
+                <span id="pageInfo">Page 1 of 1</span>
+                <button id="nextBtn" onclick="nextPage()" disabled>Next →</button>
+            </div>
         </section>
 
         <hr>
@@ -42,12 +58,38 @@
         <section id="add-book">
             <h2>Add New Book</h2>
             <form id="addBookForm">
-                <input type="text" id="newIsbn" placeholder="ISBN (13 chars)" required>
+                <input type="text" id="newIsbn" placeholder="ISBN (13 chars)" required maxlength="13">
                 <input type="text" id="newTitle" placeholder="Book Title" required>
                 <input type="number" id="newPrice" placeholder="Price" step="0.01" required>
                 <input type="text" id="newCategory" placeholder="Category" required>
-                <input type="number" id="pubId" placeholder="Publisher ID" value="1" required>
-                <input type="number" id="staffId" placeholder="Staff ID" value="1" required>
+
+                <div class="form-field">
+                    <label for="pubId">Publisher ID (1-10):</label>
+                    <select id="pubId" required>
+                        <option value="1">1 - Pearson</option>
+                        <option value="2">2 - O'Reilly Media</option>
+                        <option value="3">3 - Penguin Classics</option>
+                        <option value="4">4 - Wiley</option>
+                        <option value="5">5 - Manning Publications</option>
+                        <option value="6">6 - Apress</option>
+                        <option value="7">7 - No Starch Press</option>
+                        <option value="8">8 - Addison-Wesley Professional</option>
+                        <option value="9">9 - Packt Publishing</option>
+                        <option value="10">10 - The MIT Press</option>
+                    </select>
+                </div>
+
+                <div class="form-field">
+                    <label for="staffId">Staff ID (1-5):</label>
+                    <select id="staffId" required>
+                        <option value="1">1 - Aditya Singh</option>
+                        <option value="2">2 - Arjun Kasturi</option>
+                        <option value="3">3 - Sounak Ghosh</option>
+                        <option value="4">4 - Arnav Bhatia</option>
+                        <option value="5">5 - Megan Ryan</option>
+                    </select>
+                </div>
+
                 <button type="submit">Add Book</button>
             </form>
         </section>
@@ -58,7 +100,7 @@
             <h2>Issue Book (Borrowing Transaction)</h2>
             <form id="borrowForm">
                 <input type="number" id="borrowUserId" placeholder="User ID" required>
-                <input type="text" id="borrowIsbn" placeholder="ISBN to Borrow" required>
+                <input type="text" id="borrowIsbn" placeholder="ISBN to Borrow" required maxlength="13">
                 <label>Issue Date:</label>
                 <input type="date" id="issueDate" required>
                 <label>Due Date:</label>
