@@ -15,8 +15,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 const db = new Pool({
     user: 'postgres',
     host: 'localhost',
-    database: 'postgres',
-    password: 'sqladi@2708',
+    database: 'change_database_accordingly', //change the database
+    password: 'change_password_accordingly', // change the password
     port: 5432,
 });
 
