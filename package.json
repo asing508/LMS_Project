@@ -1,20 +1,29 @@
 {
-  "name": "lms_project",
+  "name": "library-management-system",
   "version": "1.0.0",
-  "description": "",
+  "description": "Complete Library Management System - CSE 412 Database Project",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
+  "keywords": [
+    "library",
+    "management",
+    "database",
+    "postgresql",
+    "express"
+  ],
+  "author": "Team LibrariansUp",
+  "license": "MIT",
   "dependencies": {
-    "body-parser": "^2.2.1",
+    "express": "^4.18.2",
+    "pg": "^8.11.3",
     "cors": "^2.8.5",
-    "express": "^5.1.0",
-    "pg": "^8.16.3"
+    "body-parser": "^1.20.2",
+    "bcrypt": "^5.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
   }
 }

@@ -4,111 +4,514 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LibrariansUp - LMS</title>
+    <title>Library Management System</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <div class="container">
         <header>
-            <h1>Library Management System (LMS)</h1>
-            <p>Phase 3 Implementation | Team: LibrariansUp</p>
+            <h1>Library Management System</h1>
+            <p class="subtitle">Complete Database Management Application</p>
+            <nav>
+                <button onclick="showSection('dashboard')" class="nav-btn active"
+                    data-section="dashboard">Dashboard</button>
+                <button onclick="showSection('books')" class="nav-btn" data-section="books">Books</button>
+                <button onclick="showSection('publishers')" class="nav-btn"
+                    data-section="publishers">Publishers</button>
+                <button onclick="showSection('readers')" class="nav-btn" data-section="readers">Readers</button>
+                <button onclick="showSection('staff')" class="nav-btn" data-section="staff">Staff</button>
+                <button onclick="showSection('circulation')" class="nav-btn"
+                    data-section="circulation">Circulation</button>
+                <button onclick="showSection('reports')" class="nav-btn" data-section="reports">Reports</button>
+            </nav>
         </header>
 
-        <section id="view-books">
-            <h2>Book Inventory</h2>
-            <div class="controls">
-                <input type="text" id="searchInput" placeholder="Search by Title...">
-                <button onclick="searchBooks()">Search</button>
-                <button onclick="loadBooks()">Refresh List</button>
-                <label>Sort by:</label>
-                <select id="sortSelect" onchange="sortBooks()">
-                    <option value="title">Title (A-Z)</option>
-                    <option value="title_desc">Title (Z-A)</option>
-                    <option value="price_asc">Price (Low-High)</option>
-                    <option value="price_desc">Price (High-Low)</option>
+        <section id="dashboard" class="section active">
+            <h2>Dashboard Overview</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number" id="statBooks">0</span>
+                    <span class="stat-label">Total Books</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="statReaders">0</span>
+                    <span class="stat-label">Registered Readers</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="statStaff">0</span>
+                    <span class="stat-label">Staff Members</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="statPublishers">0</span>
+                    <span class="stat-label">Publishers</span>
+                </div>
+                <div class="stat-card highlight">
+                    <span class="stat-number" id="statActive">0</span>
+                    <span class="stat-label">Active Borrowings</span>
+                </div>
+                <div class="stat-card warning">
+                    <span class="stat-number" id="statOverdue">0</span>
+                    <span class="stat-label">Overdue Books</span>
+                </div>
+            </div>
+            <div class="quick-actions">
+                <h3>Quick Actions</h3>
+                <button onclick="showSection('books'); document.getElementById('addBookForm').scrollIntoView();">Add New
+                    Book</button>
+                <button
+                    onclick="showSection('readers'); document.getElementById('addReaderForm').scrollIntoView();">Register
+                    Reader</button>
+                <button onclick="showSection('circulation');">Issue/Return Book</button>
+            </div>
+        </section>
+
+        <section id="books" class="section">
+            <h2>Book Management</h2>
+
+            <div class="form-card">
+                <h3>Add New Book</h3>
+                <form id="addBookForm">
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="bookIsbn">ISBN (13 characters)*</label>
+                            <input type="text" id="bookIsbn" maxlength="13" minlength="10" required
+                                placeholder="e.g., 9780134685991">
+                        </div>
+                        <div class="form-field">
+                            <label for="bookTitle">Title*</label>
+                            <input type="text" id="bookTitle" required placeholder="Book title">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="bookAuthno">Author Number (ID)*</label>
+                            <input type="number" id="bookAuthno" required min="1" placeholder="Author identifier">
+                        </div>
+                        <div class="form-field">
+                            <label for="bookPrice">Price ($)*</label>
+                            <input type="number" id="bookPrice" step="0.01" min="0" required placeholder="e.g., 29.99">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="bookCategory">Category*</label>
+                            <input type="text" id="bookCategory" required placeholder="e.g., Fiction, Technology">
+                        </div>
+                        <div class="form-field">
+                            <label for="bookEdition">Edition*</label>
+                            <input type="text" id="bookEdition" required placeholder="e.g., 1st, 2nd, Revised">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="bookPublisher">Publisher*</label>
+                            <select id="bookPublisher" required>
+                                <option value="">-- Select Publisher --</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label for="bookStaff">Added By Staff*</label>
+                            <select id="bookStaff" required>
+                                <option value="">-- Select Staff --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-btn">Add Book to Catalog</button>
+                </form>
+            </div>
+
+            <div class="table-section">
+                <div class="table-controls">
+                    <input type="text" id="bookSearch" placeholder="Search books..." onkeyup="searchBooks()">
+                    <select id="bookSort" onchange="loadBooks()">
+                        <option value="title">Sort by Title</option>
+                        <option value="price">Sort by Price</option>
+                        <option value="category">Sort by Category</option>
+                    </select>
+                    <select id="bookOrder" onchange="loadBooks()">
+                        <option value="asc">Ascending</option>
+                        <option value="desc">Descending</option>
+                    </select>
+                </div>
+                <div class="table-wrapper">
+                    <table id="booksTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>ISBN</th>
+                                <th>Title</th>
+                                <th>Author No.</th>
+                                <th>Category</th>
+                                <th>Edition</th>
+                                <th>Price</th>
+                                <th>Publisher</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="booksTableBody"></tbody>
+                    </table>
+                </div>
+                <div class="pagination" id="booksPagination"></div>
+            </div>
+        </section>
+
+        <section id="publishers" class="section">
+            <h2>Publisher Management</h2>
+
+            <div class="form-card">
+                <h3>Add New Publisher</h3>
+                <form id="addPublisherForm">
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="pubName">Publisher Name*</label>
+                            <input type="text" id="pubName" required placeholder="e.g., Penguin Random House">
+                        </div>
+                        <div class="form-field">
+                            <label for="pubYear">Year of Publication*</label>
+                            <input type="number" id="pubYear" required min="1800" max="2030" placeholder="e.g., 2024">
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-btn">Add Publisher</button>
+                </form>
+            </div>
+
+            <div class="table-section">
+                <div class="table-wrapper">
+                    <table id="publishersTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Publisher ID</th>
+                                <th>Name</th>
+                                <th>Year</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="publishersTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="readers" class="section">
+            <h2>Reader Management</h2>
+
+            <div class="form-card">
+                <h3>Register New Reader</h3>
+                <form id="addReaderForm">
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="readerFirstName">First Name*</label>
+                            <input type="text" id="readerFirstName" required placeholder="First name">
+                        </div>
+                        <div class="form-field">
+                            <label for="readerLastName">Last Name*</label>
+                            <input type="text" id="readerLastName" required placeholder="Last name">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="readerEmail">Email*</label>
+                            <input type="email" id="readerEmail" required placeholder="email@example.com">
+                        </div>
+                        <div class="form-field">
+                            <label for="readerAddress">Address*</label>
+                            <input type="text" id="readerAddress" required placeholder="Full address">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="readerPhone">Phone Number*</label>
+                            <input type="tel" id="readerPhone" required placeholder="e.g., 555-123-4567">
+                        </div>
+                        <div class="form-field">
+                            <label for="readerPhoneType">Phone Type*</label>
+                            <select id="readerPhoneType" required>
+                                <option value="">-- Select Type --</option>
+                                <option value="Mobile">Mobile</option>
+                                <option value="Home">Home</option>
+                                <option value="Work">Work</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="readerStaff">Registering Staff Member*</label>
+                            <select id="readerStaff" required>
+                                <option value="">-- Select Staff --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-btn">Register Reader</button>
+                </form>
+            </div>
+
+            <div class="table-section">
+                <div class="table-wrapper">
+                    <table id="readersTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>User ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Address</th>
+                                <th>Phone(s)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="readersTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="table-section" style="margin-top: 30px;">
+                <h3>Staff Assistance Log</h3>
+                <p class="help-text">Records of which staff members assisted which readers during registration</p>
+                <div class="table-wrapper">
+                    <table id="assistsTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Assist ID</th>
+                                <th>Staff Member</th>
+                                <th>Reader Name</th>
+                                <th>Reader Email</th>
+                            </tr>
+                        </thead>
+                        <tbody id="assistsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="staff" class="section">
+            <h2>Staff Management</h2>
+
+            <div class="form-card">
+                <h3>Create Staff Account (Secure)</h3>
+                <form id="addStaffForm">
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="staffName">Full Name*</label>
+                            <input type="text" id="staffName" required placeholder="Staff member name">
+                        </div>
+                        <div class="form-field">
+                            <label for="staffLogin">Login ID*</label>
+                            <input type="text" id="staffLogin" required placeholder="Unique login identifier">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="staffPassword">Password* (min 8 characters)</label>
+                            <input type="password" id="staffPassword" required minlength="8"
+                                placeholder="Secure password">
+                        </div>
+                        <div class="form-field">
+                            <label for="staffPasswordConfirm">Confirm Password*</label>
+                            <input type="password" id="staffPasswordConfirm" required minlength="8"
+                                placeholder="Confirm password">
+                        </div>
+                    </div>
+                    <div class="security-note">
+                        Password will be securely hashed using bcrypt before storage
+                    </div>
+                    <button type="submit" class="submit-btn purple">Create Staff Account</button>
+                </form>
+            </div>
+
+            <div class="table-section">
+                <div class="table-wrapper">
+                    <table id="staffTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Staff ID</th>
+                                <th>Name</th>
+                                <th>Login ID</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="staffTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="form-card" style="margin-top: 30px; background: #f8f9fa;">
+                <h3>Test Staff Login</h3>
+                <form id="testLoginForm">
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="testLoginId">Login ID</label>
+                            <input type="text" id="testLoginId" required placeholder="Enter login ID">
+                        </div>
+                        <div class="form-field">
+                            <label for="testPassword">Password</label>
+                            <input type="password" id="testPassword" required placeholder="Enter password">
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-btn">Test Login</button>
+                </form>
+                <div id="loginResult" class="result-message"></div>
+            </div>
+        </section>
+
+        <section id="circulation" class="section">
+            <h2>Book Circulation (Borrowing & Returns)</h2>
+
+            <div class="split-forms">
+                <div class="form-card">
+                    <h3>Issue Book</h3>
+                    <form id="issueBookForm">
+                        <div class="form-field">
+                            <label for="issueReader">Reader*</label>
+                            <select id="issueReader" required>
+                                <option value="">-- Select Reader --</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label for="issueBook">Book (Available)*</label>
+                            <select id="issueBook" required>
+                                <option value="">-- Select Available Book --</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label for="issueStaff">Processing Staff*</label>
+                            <select id="issueStaff" required>
+                                <option value="">-- Select Staff --</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label for="issueDate">Issue Date*</label>
+                            <input type="date" id="issueDate" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="dueDate">Due Date*</label>
+                            <input type="date" id="dueDate" required>
+                        </div>
+                        <button type="submit" class="submit-btn green">Issue Book</button>
+                    </form>
+                </div>
+
+                <div class="form-card">
+                    <h3>Return Book</h3>
+                    <form id="returnBookForm">
+                        <div class="form-field">
+                            <label for="returnBorrowId">Borrow ID*</label>
+                            <select id="returnBorrowId" required>
+                                <option value="">-- Select Active Borrowing --</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label for="returnDate">Return Date*</label>
+                            <input type="date" id="returnDate" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="returnStaff">Receiving Staff*</label>
+                            <select id="returnStaff" required>
+                                <option value="">-- Select Staff --</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="submit-btn orange">Process Return</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="table-section" style="margin-top: 30px;">
+                <h3>Borrowing Records</h3>
+                <div class="table-controls">
+                    <select id="borrowingFilter" onchange="loadBorrowings()">
+                        <option value="">All Borrowings</option>
+                        <option value="active">Active Only</option>
+                        <option value="returned">Returned Only</option>
+                        <option value="overdue">Overdue Only</option>
+                    </select>
+                </div>
+                <div class="table-wrapper">
+                    <table id="borrowingsTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Borrow ID</th>
+                                <th>Reader</th>
+                                <th>Book</th>
+                                <th>Issue Date</th>
+                                <th>Due Date</th>
+                                <th>Return Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="borrowingsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="reports" class="section">
+            <h2>Reports & Audit Log</h2>
+
+            <div class="table-controls">
+                <select id="reportFilter" onchange="loadReports()">
+                    <option value="">All Transactions</option>
+                    <option value="ISSUE">Issues Only</option>
+                    <option value="RETURN">Returns Only</option>
                 </select>
+                <button onclick="loadReports()" class="refresh-btn">Refresh</button>
             </div>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>ISBN</th>
-                            <th>Title</th>
-                            <th>Publisher</th>
-                            <th>Category</th>
-                            <th>Price</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bookTableBody">
-                    </tbody>
-                </table>
-            </div>
-            <div class="pagination">
-                <button id="prevBtn" onclick="prevPage()" disabled>← Previous</button>
-                <span id="pageInfo">Page 1 of 1</span>
-                <button id="nextBtn" onclick="nextPage()" disabled>Next →</button>
-            </div>
-        </section>
 
-        <hr>
-
-        <section id="add-book">
-            <h2>Add New Book</h2>
-            <form id="addBookForm">
-                <input type="text" id="newIsbn" placeholder="ISBN (13 chars)" required maxlength="13">
-                <input type="text" id="newTitle" placeholder="Book Title" required>
-                <input type="number" id="newPrice" placeholder="Price" step="0.01" required>
-                <input type="text" id="newCategory" placeholder="Category" required>
-
-                <div class="form-field">
-                    <label for="pubId">Publisher ID (1-10):</label>
-                    <select id="pubId" required>
-                        <option value="1">1 - Pearson</option>
-                        <option value="2">2 - O'Reilly Media</option>
-                        <option value="3">3 - Penguin Classics</option>
-                        <option value="4">4 - Wiley</option>
-                        <option value="5">5 - Manning Publications</option>
-                        <option value="6">6 - Apress</option>
-                        <option value="7">7 - No Starch Press</option>
-                        <option value="8">8 - Addison-Wesley Professional</option>
-                        <option value="9">9 - Packt Publishing</option>
-                        <option value="10">10 - The MIT Press</option>
-                    </select>
+            <div class="table-section">
+                <div class="table-wrapper">
+                    <table id="reportsTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Reg No</th>
+                                <th>Action</th>
+                                <th>Reader</th>
+                                <th>Book</th>
+                                <th>ISBN</th>
+                                <th>Processed By</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportsTableBody"></tbody>
+                    </table>
                 </div>
+            </div>
+        </section>
 
+        <div id="toast" class="toast"></div>
+    </div>
+
+    <div id="editBookModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('editBookModal')">&times;</span>
+            <h3>Edit Book</h3>
+            <form id="editBookForm">
+                <input type="hidden" id="editBookIsbn">
                 <div class="form-field">
-                    <label for="staffId">Staff ID (1-5):</label>
-                    <select id="staffId" required>
-                        <option value="1">1 - Aditya Singh</option>
-                        <option value="2">2 - Arjun Kasturi</option>
-                        <option value="3">3 - Sounak Ghosh</option>
-                        <option value="4">4 - Arnav Bhatia</option>
-                        <option value="5">5 - Megan Ryan</option>
-                    </select>
+                    <label>Title</label>
+                    <input type="text" id="editBookTitle" required>
                 </div>
-
-                <button type="submit">Add Book</button>
+                <div class="form-field">
+                    <label>Author No.</label>
+                    <input type="number" id="editBookAuthno" required>
+                </div>
+                <div class="form-field">
+                    <label>Price</label>
+                    <input type="number" id="editBookPrice" step="0.01" required>
+                </div>
+                <div class="form-field">
+                    <label>Category</label>
+                    <input type="text" id="editBookCategory" required>
+                </div>
+                <div class="form-field">
+                    <label>Edition</label>
+                    <input type="text" id="editBookEdition" required>
+                </div>
+                <button type="submit" class="submit-btn">Update Book</button>
             </form>
-        </section>
-
-        <hr>
-
-        <section id="borrow-book">
-            <h2>Issue Book (Borrowing Transaction)</h2>
-            <form id="borrowForm">
-                <input type="number" id="borrowUserId" placeholder="User ID" required>
-                <input type="text" id="borrowIsbn" placeholder="ISBN to Borrow" required maxlength="13">
-                <label>Issue Date:</label>
-                <input type="date" id="issueDate" required>
-                <label>Due Date:</label>
-                <input type="date" id="dueDate" required>
-                <button type="submit">Issue Book</button>
-            </form>
-            <p id="transactionMessage"></p>
-        </section>
+        </div>
     </div>
 
     <script src="app.js"></script>
